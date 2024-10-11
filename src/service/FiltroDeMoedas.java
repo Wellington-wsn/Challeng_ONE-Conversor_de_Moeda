@@ -14,5 +14,5 @@ public class FiltroDeMoedas {
                 .stream()
                 .filter(entrada -> listaDeMoedas.contains(entrada.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    };
+    }
 }
