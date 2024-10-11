@@ -28,4 +28,16 @@ public class ApiCliente {
             throw new CustomApiException("Erro ao realizar a requisição", e);
         }
     }
+
+    public String buscaLivre(String moeda, String moeda2, Double montante) throws CustomApiException {
+        String link = "https://v6.exchangerate-api.com/v6/" + getChaveApi() + "/pair/" +moeda+"/"+moeda2+"/"+ montante;
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(link)).build();
+
+        try {
+            HttpResponse<String> resposta = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return resposta.body();
+        } catch (InterruptedException | IOException e) {
+            throw new CustomApiException("Erro ao realizar a requisição", e);
+        }
+    }
 }

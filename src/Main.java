@@ -7,6 +7,7 @@ import http.ApiCliente;
 import model.ConverterMoeda;
 import service.CalcularTaxas;
 import service.ConverterMoedaApi;
+import service.ConverterMoedaLivreApi;
 import service.FiltroDeMoedas;
 
 import java.util.Map;
@@ -29,12 +30,13 @@ public class Main {
         System.out.println("4) Real brasileiro => Dólar");
         System.out.println("5) Dólar => Peso colombiano");
         System.out.println("6) Peso colombiano => Dólar");
-        System.out.println("7) Sair");
+        System.out.println("7) Pesquisa moedas");
+        System.out.println("8) Sair");
         System.out.println("Escolha uma opção válida:");
 
         int opcao = sc.nextInt();
 
-        if (opcao == 7) {
+        if (opcao == 8) {
             System.out.println("Programa encerrado.");
             sc.close();
             return;
@@ -51,6 +53,28 @@ public class Main {
             case 4: pesquisarMoeda = "BRL"; moedaDeConversao = "USD"; break;
             case 5: pesquisarMoeda = "USD"; moedaDeConversao = "COP"; break;
             case 6: pesquisarMoeda = "COP"; moedaDeConversao = "USD"; break;
+            case 7:
+                System.out.println("Digite a primeira moeda (ex: USD): ");
+                pesquisarMoeda = sc.next().toUpperCase();
+                System.out.println("Digite a segunda moeda (ex: BRL): ");
+                moedaDeConversao = sc.next().toUpperCase();
+                System.out.println("Digite o montante para conversão: ");
+                double montante = sc.nextDouble();
+
+                try {
+                    String jsonRespostaLivre = api.buscaLivre(pesquisarMoeda, moedaDeConversao, montante);
+                    ConverterMoedaLivreApi apiResposta = gson.fromJson(jsonRespostaLivre, ConverterMoedaLivreApi.class);
+                    System.out.printf("O Valor de %.2f [%s] corresponde ao valor final de =>>> %.2f [%s]\n", montante, apiResposta.base_code(), apiResposta.conversion_result(), apiResposta.target_code());
+
+
+                } catch (CustomApiException | JsonSyntaxException | JsonIOException e) {
+                    System.out.println("Erro ao realizar a busca livre: " + e.getMessage());
+                }finally {
+                    System.out.println("Sistema encerrado!");
+                }
+                return;
+
+
             default:
                 System.out.println("Opção inválida. Tente novamente.");
                 sc.close();
@@ -80,6 +104,8 @@ public class Main {
 
         } catch (CustomApiException | JsonSyntaxException | JsonIOException e) {
             System.out.println("Erro ao converter JSON: " + e.getMessage());
+        }finally {
+            System.out.println("Sistema finalizado!");
         }
     }
 }
