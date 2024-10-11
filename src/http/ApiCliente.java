@@ -9,7 +9,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class ApiCliente {
-    private String chaveApi = "b6a4139af95249d702d8eb1f";
+    private final String chaveApi = "b6a4139af95249d702d8eb1f";
 
     public String getChaveApi() {
         return chaveApi;
